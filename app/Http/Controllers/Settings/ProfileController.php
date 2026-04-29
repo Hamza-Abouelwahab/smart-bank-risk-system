@@ -30,7 +30,7 @@ class ProfileController extends Controller
             'address'       => $request->address,
         ]);
 
-        return redirect()->route('onboarding.profile');  // ← must match route name
+        return redirect()->route('onboarding.profile'); 
     }
     /**
      * Show the user's profile settings page.

@@ -27,6 +27,12 @@ Route::middleware(['auth', 'verified', 'onboarding'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 });
 
+// admin route 
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::inertia('/admin', 'Admin/Dashboard')->name('admin.dashboard');
+});
+
 
 
 require __DIR__ . '/settings.php';

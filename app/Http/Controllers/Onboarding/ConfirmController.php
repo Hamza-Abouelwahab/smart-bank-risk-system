@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Onboarding;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ConfirmController extends Controller
 {
     public function create()
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        
 
         return Inertia::render('Onboarding/Confirm', [
             'profile' => [

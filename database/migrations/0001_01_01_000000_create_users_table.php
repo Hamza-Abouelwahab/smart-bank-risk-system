@@ -29,6 +29,10 @@ return new class extends Migration
             $table->string('occupation')->nullable();
             $table->string('monthly_income')->nullable();      // range e.g. "5000-10000"
             $table->string('source_of_funds')->nullable();
+
+            // the role 
+
+            $table->string('role')->default('user');
             
             $table->rememberToken();
             $table->timestamps();
