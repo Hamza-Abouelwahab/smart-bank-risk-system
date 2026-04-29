@@ -14,6 +14,24 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'date_of_birth' => 'required|date',
+            'phone'         => 'required|string',
+            'address'       => 'required|string',
+        ]);
+
+        $request->user()->update([
+            'date_of_birth' => $request->date_of_birth,
+            'phone'         => $request->phone,
+            'address'       => $request->address,
+        ]);
+
+        return redirect()->route('onboarding.profile');  // ← must match route name
+    }
     /**
      * Show the user's profile settings page.
      */
