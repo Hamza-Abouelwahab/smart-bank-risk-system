@@ -38,9 +38,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="my-6 flex items-center justify-start">
+                            <div className="my-6 flex items-center  justify-start">
                                 <Button
-                                    className="w-full"
+                                    className="w-full bg-orange-500 hover:bg-orange-400 cursor-pointer"
                                     disabled={processing}
                                     data-test="email-password-reset-link-button"
                                 >
@@ -56,7 +56,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 <div className="space-x-1 text-center text-sm text-muted-foreground">
                     <span>Or, return to</span>
-                    <TextLink href={login()}>log in</TextLink>
+                    <TextLink className='text-orange-500 font-semibold' href={login()}>log in</TextLink>
                 </div>
             </div>
         </>
