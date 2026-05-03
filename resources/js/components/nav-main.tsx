@@ -20,6 +20,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
                             asChild
+                            className='mt-3.5 font-extrabold'
                             isActive={isCurrentUrl(item.href)}
                             tooltip={{ children: item.title }}
                         >

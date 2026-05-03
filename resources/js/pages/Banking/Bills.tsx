@@ -221,4 +221,3 @@ export default function Bills() {
     );
 }
 
-Bills.layout = () => null;

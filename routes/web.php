@@ -11,6 +11,7 @@ use App\Http\Controllers\Banking\WithdrawController;
 use App\Http\Controllers\Banking\DepositController;
 use App\Http\Controllers\Banking\TransferController;
 use App\Http\Controllers\Banking\BillController;
+use App\Http\Controllers\Banking\SavingChallengeController;
 use App\Http\Controllers\Banking\TransactionController;
 
 Route::inertia('/', 'welcome', [
@@ -58,6 +59,9 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::post('/bills',       [BillController::class,        'store'])->name('bills.store');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+
+    Route::get('saving-challenges/create' , [SavingChallengeController::class , 'create'])->name('saving-challenges.create') ;
+    Route::post('/saving-challenges', [SavingChallengeController::class, 'store'])->name('saving-challenges.store');
 });
 
 require __DIR__ . '/settings.php';

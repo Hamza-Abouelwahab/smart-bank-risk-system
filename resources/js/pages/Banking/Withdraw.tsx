@@ -1,3 +1,4 @@
+import AppLayout from '@/layouts/app-layout';
 import { useForm, usePage, Head } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 
@@ -23,6 +24,7 @@ export default function Withdraw() {
 
     return (
         <>
+        {/* <AppLayout> */}
             <Head title="Withdraw" />
             <div className="min-h-screen bg-[#FFFCF9] p-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 <div className="max-w-lg mx-auto">
@@ -156,6 +158,7 @@ export default function Withdraw() {
                     </div>
                 </div>
             </div>
+            {/* </AppLayout> */}
         </>
     );
 }

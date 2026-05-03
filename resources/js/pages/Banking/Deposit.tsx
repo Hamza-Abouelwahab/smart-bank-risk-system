@@ -1,3 +1,4 @@
+import AppLayout from '@/layouts/app-layout';
 import { useForm, usePage, Head } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 
@@ -194,4 +195,4 @@ export default function Deposit() {
     );
 }
 
-Deposit.layout = () => null;
+
