@@ -77,7 +77,7 @@ class DashboardController extends Controller
 
         // ── Goals (static demo — replace with DB model when ready) ────
         $goals = [
-            ['id' => 1, 'name' => 'Emergency Fund',  'icon' => '🛡️', 'target' => 10000, 'saved' => min($balance * 0.4, 10000), 'color' => '#E8632A'],
+            ['id' => 1, 'name' => 'Emergency Fund',  'icon' => '🛡️', 'target' => 1000, 'saved' => min($balance * 0.4, 10000), 'color' => '#E8632A'],
             ['id' => 2, 'name' => 'Vacation',         'icon' => '✈️', 'target' => 5000,  'saved' => min($balance * 0.15, 5000), 'color' => '#3B82F6'],
             ['id' => 3, 'name' => 'New Laptop',       'icon' => '💻', 'target' => 8000,  'saved' => min($balance * 0.1, 8000),  'color' => '#8B5CF6'],
         ];

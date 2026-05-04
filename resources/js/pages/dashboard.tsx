@@ -72,7 +72,16 @@ const CAT_ICON: Record<string, string> = {
 };
 
 export default function Dashboard() {
-    const { auth, transactions, summary, goals, challenges, auto_saving, ai_insights, smart_alerts } = usePage<any>().props;
+    const {
+        auth,
+        transactions,
+        summary,
+        goals,
+        challenges,
+        auto_saving,
+        ai_insights,
+        smart_alerts,
+    } = usePage<any>().props;
 
     const user: AuthUser = auth.user;
     const [balanceVisible, setBalanceVisible] = useState(true);
@@ -368,153 +377,234 @@ export default function Dashboard() {
                         </div>
 
                         <div className="grid grid-cols-3 gap-6">
-            {/* Left Column - Savings Features */}
-            <div className="col-span-2 space-y-6">
-              {/* Savings Goals */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-50 rounded-xl">
-                      <Target className="w-5 h-5 text-purple-600" />
-                    </div>
-                    <h3 className="text-gray-800">Savings Goals</h3>
-                  </div>
-                  <button
-                    onClick={() => router.visit('/dashboard')}
-                    className="text-primary hover:text-orange-600 text-sm"
-                  >
-                    View All
-                  </button>
-                </div>
+                            {/* Left Column - Savings Features */}
+                            <div className="col-span-2 space-y-6">
+                                {/* Savings Goals */}
+                                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                                    <div className="mb-6 flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="rounded-xl bg-purple-50 p-2">
+                                                <Target className="h-5 w-5 text-purple-600" />
+                                            </div>
+                                            <h3 className="text-gray-800">
+                                                Savings Goals
+                                            </h3>
+                                        </div>
+                                        <button
+                                            onClick={() =>
+                                                router.visit('/dashboard')
+                                            }
+                                            className="text-sm text-primary hover:text-orange-600"
+                                        >
+                                            View All
+                                        </button>
+                                    </div>
 
-                <div className="space-y-4">
-                  {activeGoals.slice(0, 2).map((goal:any) => {
-                   const progress = goal.target > 0 ? (goal.saved / goal.target) * 100 : 0;
-                    return (
-                      <div key={goal.id} className="border border-gray-200 rounded-xl p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <p className="text-gray-800">{goal.name}</p>
-                          <p className="text-sm text-gray-600">{progress.toFixed(0)}%</p>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2.5 mb-2">
-                          <div
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2.5 rounded-full transition-all"
-                            style={{ width: `${progress}%` }}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">{Number(goal.saved).toFixed(2) } MAD</span>
-                          <span className="text-gray-500">of {Number(goal.target).toFixed(2)} MAD</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-
-            {/* Saving Challenges */}
-                  <div className="">
-
-            <div className="rounded-2xl border border-gray-200 bg-white px-6 shadow-sm">
-                <div className="flex justify-between items-center  py-6 ">
-
-    <h3 className=" text-gray-800  ">Saving Challenges</h3>
-                  <button
-        onClick={() => router.visit('/saving-challenges/create')}
-        className="rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-600"
-        >
-        New Challenge
-    </button>
-        </div>
-    {challenges?.slice(0, 2).map((challenge: any) => (
-        <div key={challenge.id} className="mb-4 rounded-xl border border-gray-200 p-4">
-            <div className="mb-2 flex items-center justify-between">
-                <p className="text-gray-800">Save {challenge.name} MAD</p>
-                <p className="text-sm text-gray-600">{challenge.progress}%</p>
-            </div>
-
-            <div className="mb-2 h-2.5 w-full rounded-full bg-gray-100">
-                <div
-                    className="h-2.5 rounded-full bg-orange-500"
-                    style={{ width: `${challenge.progress}%` }}
-                    />
-            </div>
-
-            <div className="flex justify-between text-sm text-gray-500">
-                <span>{challenge.days_left} days left</span>
-                <span>{challenge.reward}</span>
-            </div>
-        </div>
-    ))}
-</div>
-</div>
-                    </div>
-            {/* Right Column - AI & Alerts */}
-            <div className="space-y-6">
-              {/* AI Insights */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl">
-                    <Sparkles className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <h3 className="text-gray-800">AI Insights</h3>
-                </div>
-
-                <div className="space-y-4">
-                  {ai_insights.map((insight:any) => {
-                    const Icon = insight.icon;
-                    return (
-                        <div
-                        key={insight.id}
-                        className={`p-4 rounded-xl border ${
-                          insight.color === 'green'
-                            ? 'bg-green-50 border-green-200'
-                            : 'bg-blue-50 border-blue-200'
-                        }`}
-                      >
-                        <div className="flex items-start gap-0">
-                          <Icon
-                            className={` mt-0.5 ${
-                              insight.color === 'green' ? 'text-green-600' : 'text-blue-600'
-                            }`}
-                          />
-                          <div>
-                            <p
-                              className={`mb-1 ${
-                                insight.color === 'green' ? 'text-green-800' : 'text-blue-800'
-                              }`}
-                            >
-                                <div className="flex gap-2 ">
-
-                              <p className=''>{Icon}</p>
-                              {insight.title}
+                                    <div className="space-y-4">
+                                        {activeGoals
+                                            .slice(0, 2)
+                                            .map((goal: any) => {
+                                                const progress =
+                                                    goal.target > 0
+                                                        ? (goal.saved /
+                                                              goal.target) *
+                                                          100
+                                                        : 0;
+                                                return (
+                                                    <div
+                                                        key={goal.id}
+                                                        className="rounded-xl border border-gray-200 p-4"
+                                                    >
+                                                        <div className="mb-3 flex items-center justify-between">
+                                                            <p className="text-gray-800">
+                                                                {goal.name}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                {progress.toFixed(
+                                                                    0,
+                                                                )}
+                                                                %
+                                                            </p>
+                                                        </div>
+                                                        <div className="mb-2 h-2.5 w-full rounded-full bg-gray-100">
+                                                            <div
+                                                                className="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all"
+                                                                style={{
+                                                                    width: `${progress}%`,
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="flex items-center justify-between text-sm">
+                                                            <span className="text-gray-600">
+                                                                {Number(
+                                                                    goal.saved,
+                                                                ).toFixed(
+                                                                    2,
+                                                                )}{' '}
+                                                                MAD
+                                                            </span>
+                                                            <span className="text-gray-500">
+                                                                of{' '}
+                                                                {Number(
+                                                                    goal.target,
+                                                                ).toFixed(
+                                                                    2,
+                                                                )}{' '}
+                                                                MAD
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
                                 </div>
-                            </p>
-                            <p
-                              className={`text-sm  pl-8 ${
-                                  insight.color === 'green' ? 'text-green-600' : 'text-blue-600'
-                                }`}
-                                >
-                              {insight.message}
-                            </p>
-                          </div>
+
+                                {/* Saving Challenges */}
+                                <div className="">
+                                    <div className="rounded-2xl border border-gray-200 bg-white px-6 shadow-sm">
+                                        <div className="flex items-center justify-between py-6">
+                                            <h3 className="text-gray-800">
+                                                Saving Challenges
+                                            </h3>
+                                            <button
+                                                onClick={() =>
+                                                    router.visit(
+                                                        '/saving-challenges/create',
+                                                    )
+                                                }
+                                                className="rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+                                            >
+                                                New Challenge
+                                            </button>
+                                        </div>
+                                        {challenges
+                                            ?.slice(0, 2)
+                                            .map((challenge: any) => (
+                                                <div
+                                                    key={challenge.id}
+                                                    className="mb-4 rounded-xl border border-gray-200 p-4"
+                                                >
+                                                    <div className="mb-2 flex items-center justify-between">
+                                                        <p className="text-gray-800">
+                                                            Save{' '}
+                                                            {challenge.name} MAD
+                                                        </p>
+                                                        <p className="text-sm text-gray-600">
+                                                            {challenge.progress}
+                                                            %
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="mb-2 h-2.5 w-full rounded-full bg-gray-100">
+                                                        <div
+                                                            className="h-2.5 rounded-full bg-orange-500"
+                                                            style={{
+                                                                width: `${challenge.progress}%`,
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                    <div className="flex justify-between text-sm text-gray-500">
+                                                        <span>
+                                                            {
+                                                                challenge.days_left
+                                                            }{' '}
+                                                            days left
+                                                        </span>
+                                                        <span>
+                                                            {challenge.reward}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Right Column - AI & Alerts */}
+                            <div className="space-y-6">
+                                {/* AI Insights */}
+                                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                                    <div className="mb-6 flex items-center gap-3">
+                                        <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-2">
+                                            <Sparkles className="h-5 w-5 text-purple-600" />
+                                        </div>
+                                        <h3 className="text-gray-800">
+                                            AI Insights
+                                        </h3>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        {ai_insights.map((insight: any) => {
+                                            const Icon = insight.icon;
+                                            return (
+                                                <div
+                                                    key={insight.id}
+                                                    className={`rounded-xl border p-4 ${
+                                                        insight.color ===
+                                                        'green'
+                                                            ? 'border-green-200 bg-green-50'
+                                                            : 'border-blue-200 bg-blue-50'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-start gap-0">
+                                                        <Icon
+                                                            className={`mt-0.5 ${
+                                                                insight.color ===
+                                                                'green'
+                                                                    ? 'text-green-600'
+                                                                    : 'text-blue-600'
+                                                            }`}
+                                                        />
+                                                        <div>
+                                                            <p
+                                                                className={`mb-1 ${
+                                                                    insight.color ===
+                                                                    'green'
+                                                                        ? 'text-green-800'
+                                                                        : 'text-blue-800'
+                                                                }`}
+                                                            >
+                                                                <div className="flex gap-2">
+                                                                    <p className="">
+                                                                        {Icon}
+                                                                    </p>
+                                                                    {
+                                                                        insight.title
+                                                                    }
+                                                                </div>
+                                                            </p>
+                                                            <p
+                                                                className={`pl-8 text-sm ${
+                                                                    insight.color ===
+                                                                    'green'
+                                                                        ? 'text-green-600'
+                                                                        : 'text-blue-600'
+                                                                }`}
+                                                            >
+                                                                {
+                                                                    insight.message
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() =>
+                                            router.visit(
+                                                '/saving-challenges/create',
+                                            )
+                                        }
+                                        className="mt-4 w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-3 text-white transition-all hover:shadow-lg"
+                                    >
+                                        Ask AI Advisor
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-
-);
-})}
-                </div>
-
-                <button
-                  onClick={() => router.visit('/saving-challenges/create') }
-                  className="w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl hover:shadow-lg transition-all"
-                >
-                  Ask AI Advisor
-                </button>
-              </div>
-                  </div>
-                  </div>
 
                         {/* Bottom row */}
                         <div
@@ -800,7 +890,6 @@ export default function Dashboard() {
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 </main>
             </div>
