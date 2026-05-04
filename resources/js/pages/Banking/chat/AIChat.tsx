@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Bot, Send, Sparkles } from 'lucide-react';
 import { router, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+
 interface Message {
   id: string;
   text: string;
@@ -23,9 +23,9 @@ export default function AIChat() {
 
   const aiResponses: Record<string, string> = {
     save: 'Great question! I recommend following the 50/30/20 rule: 50% for needs, 30% for wants, and 20% for savings. Based on your current balance, you could save around 1,500 DH per month.',
-    invest: 'For investment advice, I suggest diversifying your portfolio. Consider low-risk options like savings accounts or bonds, and gradually explore mutual funds. Always consult with a certified financial advisor before making major investment decisions.',
-    budget: 'Creating a budget is essential! Track your expenses, categorize them, and identify areas where you can reduce spending. Use the savings simulator feature to see how small daily savings can add up over time.',
     loan: 'Before taking a loan, make sure you understand the interest rates, repayment terms, and total cost. Only borrow what you can comfortably repay. Our bank offers competitive rates - contact customer support for more details.',
+    budget: 'Creating a budget is essential! Track your expenses, categorize them, and identify areas where you can reduce spending. Use the savings simulator feature to see how small daily savings can add up over time.',
+    invest: 'For investment advice, I suggest diversifying your portfolio. Consider low-risk options like savings accounts or bonds, and gradually explore mutual funds. Always consult with a certified financial advisor before making major investment decisions.',
     default: 'That\'s an interesting question! I recommend reviewing your transaction history to understand your spending patterns. You can also use our savings simulator to plan your financial goals. Is there a specific aspect of your finances you\'d like to improve?',
   };
 
@@ -82,7 +82,7 @@ export default function AIChat() {
         <header className="bg-white border-b border-gray-200">
           <div className="px-8 py-6">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-primary to-orange-600 rounded-xl p-2.5">
+              <div className="bg-orange-600 rounded-xl p-2.5">
                 <Bot className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -125,7 +125,7 @@ export default function AIChat() {
                 <div
                   className={`max-w-[80%] rounded-2xl px-5 py-3 ${
                     message.sender === 'user'
-                      ? 'bg-gradient-to-r from-primary to-orange-600 text-white'
+                      ? 'bg-orange-600 text-white'
                       : 'bg-white border border-gray-200 text-gray-800'
                   }`}
                 >
@@ -152,7 +152,7 @@ export default function AIChat() {
               <button
                 onClick={handleSend}
                 disabled={!inputText.trim()}
-                className="bg-gradient-to-r from-primary to-orange-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-orange-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <Send className="w-5 h-5" />
                 <span>Send</span>
