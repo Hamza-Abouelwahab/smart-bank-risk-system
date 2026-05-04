@@ -60,12 +60,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Ai Advisor ',
-        href: 'ai-chat',
+        href: '/ai-chat',
         icon: Bot,
     },
     {
         title: 'Support',
-        href: '#',
+        href: '/support',
         icon: Headphones,
     },
 ];

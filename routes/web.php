@@ -14,6 +14,7 @@ use App\Http\Controllers\Banking\TransferController;
 use App\Http\Controllers\Banking\BillController;
 use App\Http\Controllers\Banking\SavingChallengeController;
 use App\Http\Controllers\Banking\TransactionController;
+use App\Http\Controllers\SupportController;
 use Inertia\Inertia;
 
 Route::inertia('/', 'welcome', [
@@ -77,6 +78,20 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::middleware(['auth', 'onboarding'])->get('/ai-chat', function () {
     return Inertia::render('Banking/chat/AIChat');
 })->name('ai-chat');
+});
+
+
+// the sepport pages 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/support', [SupportController::class, 'index'])->name('support');
+    Route::get('/support/security', [SupportController::class, 'security'])->name('support.security');
+    Route::get('/support/locked', [SupportController::class, 'locked'])->name('support.locked');
+    Route::get('/support/unlock', [SupportController::class, 'unlock'])->name('support.unlock');
+    Route::get('/support/unlocked', [SupportController::class, 'unlocked'])->name('support.unlocked');
+
+    Route::post('/support/report', [SupportController::class, 'report'])->name('support.report');
+    Route::post('/support/verify', [SupportController::class, 'verify'])->name('support.verify');
 });
 
 require __DIR__ . '/settings.php';
