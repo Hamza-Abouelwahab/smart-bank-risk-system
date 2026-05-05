@@ -1,6 +1,6 @@
-import AppLayout from '@/layouts/app-layout';
 import { useForm, usePage, Head } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 const QUICK_AMOUNTS = [500, 1000, 2000, 5000];
 

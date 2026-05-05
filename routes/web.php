@@ -17,6 +17,12 @@ use App\Http\Controllers\Banking\TransactionController;
 use App\Http\Controllers\SupportController;
 use Inertia\Inertia;
 
+
+
+Route::get('/two-factor-challenge', function () {
+    return Inertia::render('auth/two-factor-challenge');
+})->name('two-factor.login');
+
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
