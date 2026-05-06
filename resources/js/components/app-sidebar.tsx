@@ -60,8 +60,14 @@ const mainNavItems: NavItem[] = [
     },
 
     {
-        title: 'Appointment',
+        title: 'Appointment ',
         href: '/appointments/create',
+        icon: CalendarCheck,
+    },
+
+    {
+        title: 'Simulation ',
+        href: '/simulation',
         icon: CalendarCheck,
     },
 
