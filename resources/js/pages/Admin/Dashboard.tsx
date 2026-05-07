@@ -262,37 +262,41 @@ export default function AdminDashboard() {
                         {/* Top Bar */}
 
 
-                        <div className="space-y-6 p-5 lg:p-6">
+                        <div className="space-y-5 p-3 sm:p-4 lg:p-6">
                             {/* Stats */}
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-6">
-                                {statCards.map((card) => {
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 2xl:grid-cols-4">
+                                {statCards.map((card, index) => {
                                     const Icon = card.icon;
                                     const tone = toneClasses[card.tone];
+
+                                    const isLastOddCard =
+                                        statCards.length % 2 !== 0 && index === statCards.length - 1;
 
                                     return (
                                         <div
                                             key={card.label}
-                                            className="fintech-card rounded-3xl border border-[#ECE7DF] bg-white p-5 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]"
+                                            className={`fintech-card rounded-[28px] border border-[#ECE7DF] bg-white p-4 shadow-sm transition hover:shadow-md dark:border-[#2A2520] dark:bg-[#1A1714] sm:p-5 ${isLastOddCard ? 'col-span-2 xl:col-span-1' : ''
+                                                }`}
                                         >
                                             <div className="mb-4 flex items-start justify-between">
                                                 <div
-                                                    className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tone.soft} ${tone.text}`}
+                                                    className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tone.soft} ${tone.text} sm:h-12 sm:w-12`}
                                                 >
-                                                    <Icon className="h-6 w-6" />
+                                                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                                                 </div>
                                             </div>
 
-                                            <p className="text-sm text-[#7B756E] dark:text-[#9A8E85]">
+                                            <p className="text-xs font-medium text-[#7B756E] dark:text-[#9A8E85] sm:text-sm">
                                                 {card.label}
                                             </p>
-                                            <p className="mt-1 text-[30px] font-extrabold leading-none tracking-tight text-[#171412] dark:text-[#F5F0EA]">
+
+                                            <p className="mt-2 break-words text-[18px] font-extrabold leading-tight tracking-tight text-[#171412] dark:text-[#F5F0EA] sm:text-[28px]">
                                                 {card.value}
                                             </p>
-                                            <p className="mt-3 text-sm text-[#7B756E] dark:text-[#9A8E85]">
-                                                <span className="font-semibold text-green-600">
-                                                    ↗
-                                                </span>{' '}
-                                                {card.change}
+
+                                            <p className="mt-3 flex items-center gap-1 text-[11px] text-[#7B756E] dark:text-[#9A8E85] sm:text-sm">
+                                                <span className="font-semibold text-green-600">↗</span>
+                                                <span className="truncate">{card.change}</span>
                                             </p>
                                         </div>
                                     );
