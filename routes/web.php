@@ -55,11 +55,14 @@ Route::middleware(['auth'])->group(function () {
 
     // for book an Appointment
 
-    Route::post('/appointments', [AppointmentController::class, 'store']);
+    Route::get('/appointments/create', [AppointmentController::class, 'create'])
+        ->name('appointments.create');
 
-    Route::get('/appointments/create', function () {
-        return Inertia::render('appointments/Create');
-    });
+    Route::post('/appointments', [AppointmentController::class, 'store'])
+        ->name('appointments.store');
+
+    Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])
+        ->name('appointments.update');
 
     // for simulation 
     // 🔥 Simulation UI
