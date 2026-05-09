@@ -51,6 +51,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/onboarding/profile',  [ProfileController::class, 'create'])->name('onboarding.profile');
     Route::post('/onboarding/profile', [ProfileController::class, 'store'])->name('onboarding.profile.store');
 
+    Route::post('/onboarding/profile/scan', [ProfileController::class, 'scan'])
+    ->name('onboarding.profile.scan');
+
     Route::get('/onboarding/bank',     [BankController::class, 'create'])->name('onboarding.bank');
     Route::post('/onboarding/bank',    [BankController::class, 'store'])->name('onboarding.bank.store');
 

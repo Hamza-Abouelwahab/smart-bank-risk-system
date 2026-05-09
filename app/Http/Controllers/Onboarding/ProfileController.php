@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 
+
 class ProfileController extends Controller
 {
     public function create(Request $request)
@@ -25,7 +26,7 @@ class ProfileController extends Controller
                 'cin' => [
                     'required',
                     'string',
-                    'regex:/^[A-Z]{2}[0-9]{6}$/',
+                    'regex:/^[A-Z]{1,2}[0-9]{4,8}$/',
                     Rule::unique('profiles', 'cin')->ignore($profile?->id),
                 ],
                 'date_of_birth' => [
@@ -61,5 +62,27 @@ class ProfileController extends Controller
         );
 
         return redirect()->route('onboarding.bank');
+    }
+
+    public function scan(Request $request)
+    {
+        $request->validate([
+            'card_image' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $path = $request->file('card_image')->store('cin-scans', 'public');
+
+        // DEMO OCR RESULT
+        // Later you replace this with real OCR.
+        return response()->json([
+            'success' => true,
+            'image_path' => $path,
+            'extracted' => [
+                'cin' => 'AB123456',
+                'date_of_birth' => '2000-12-22',
+                'phone' => '',
+                'address' => 'Casablanca, Morocco',
+            ],
+        ]);
     }
 }

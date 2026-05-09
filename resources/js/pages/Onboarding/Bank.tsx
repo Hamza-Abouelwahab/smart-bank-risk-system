@@ -39,7 +39,7 @@ export default function Bank() {
 
                 <div className="relative z-10 flex items-center gap-3">
                     <div className="w-9 h-9 bg-[#E8632A] rounded-xl flex items-center justify-center font-bold text-white text-base" style={{ fontFamily: "'Syne', sans-serif" }}>B</div>
-                    <span className="text-white font-bold text-base" style={{ fontFamily: "'Syne', sans-serif" }}>BankCo</span>
+                    <span className="text-white font-bold text-base" style={{ fontFamily: "'Syne', sans-serif" }}>BANK AL-ANDALOUS</span>
                 </div>
 
                 <div className="relative z-10">
@@ -79,7 +79,7 @@ export default function Bank() {
                 <div className="w-full max-w-md mx-auto flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-8 lg:hidden">
                         <div className="w-8 h-8 bg-[#E8632A] rounded-lg flex items-center justify-center text-white font-bold text-sm">B</div>
-                        <span className="font-bold text-[#0F0D0B]" style={{ fontFamily: "'Syne', sans-serif" }}>BankCo</span>
+                        <span className="font-bold text-[#0F0D0B]" style={{ fontFamily: "'Syne', sans-serif" }}>BANK AL-ANDALOUS</span>
                     </div>
 
                     <div className="mb-8">
