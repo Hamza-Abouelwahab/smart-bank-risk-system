@@ -157,11 +157,11 @@ export default function AccountShow() {
                                 {/* Chip */}
                                 <div className="flex items-center gap-3 sm:gap-4">
                                     <div className="flex h-9 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-orange-500 shadow-lg shadow-orange-900/20 sm:h-11 sm:w-14">
-                                        <div className="grid h-6 w-8 grid-cols-2 gap-1 rounded-lg border border-yellow-700/30 p-1 sm:h-7 sm:w-10">
-                                            <span className="rounded bg-yellow-700/20" />
-                                            <span className="rounded bg-yellow-700/20" />
-                                            <span className="rounded bg-yellow-700/20" />
-                                            <span className="rounded bg-yellow-700/20" />
+                                        <div className="grid h-6 w-9 grid-cols-2 gap-2 rounded-lg border-yellow-700/30 p-1 sm:h-7 sm:w-9">
+                                            <span className="rounded bg-yellow-700/40" />
+                                            <span className="rounded bg-yellow-700/40" />
+                                            <span className="rounded bg-yellow-700/40" />
+                                            <span className="rounded bg-yellow-700/40" />
                                         </div>
                                     </div>
 

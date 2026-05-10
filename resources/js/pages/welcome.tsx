@@ -8,7 +8,7 @@ import {
     Bot,
     Calculator,
     Target,
-    PauseCircle,
+    CalendarCheck,
     ArrowRight,
     Rocket,
     Eye,
@@ -29,11 +29,13 @@ import {
     Instagram,
     Linkedin,
     ArrowDownToLine,
+    ChevronUp,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 // import { dashboard, login, register } from '@/routes';
 import logo from '../assets/sucerity-logo.png';
-import { useState } from 'react';
+import archImage from '../assets/andalous-arch.png';
+import { useEffect, useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 
 export default function Welcome({
@@ -44,6 +46,8 @@ export default function Welcome({
     const { auth } = usePage().props as any;
 
     const [open, setOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState('home');
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     const features = [
         {
@@ -72,11 +76,53 @@ export default function Welcome({
             text: 'Create goals, accept terms, and track your daily progress.',
         },
         {
-            icon: PauseCircle,
-            title: 'Emergency Stop',
-            text: 'Pause or stop all active goals instantly with one click.',
+            icon: CalendarCheck,
+            title: 'Appointment',
+            text: 'Book and manage your banking appointments directly from the app.',
         },
     ];
+
+    const navItems = [
+        { label: 'Home', id: 'home' },
+        { label: 'About Us', id: 'aboutus' },
+        { label: 'Features', id: 'features' },
+        { label: 'Security', id: 'security' },
+        { label: 'Contact Us', id: 'contactus' },
+    ];
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentPosition = window.scrollY + 120;
+
+            setShowScrollTop(window.scrollY > 420);
+
+            for (const item of navItems) {
+                const section = document.getElementById(item.id);
+
+                if (!section) continue;
+
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (
+                    currentPosition >= sectionTop &&
+                    currentPosition < sectionBottom
+                ) {
+                    setActiveSection(item.id);
+                    break;
+                }
+            }
+        };
+
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <>
@@ -96,16 +142,16 @@ export default function Welcome({
                 </div>
 
                 {/* Navbar */}
-                <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 shadow-sm backdrop-blur-xl">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+                <header className="fixed top-0 right-0 left-0 z-50 border-b border-slate-200 bg-white/80 shadow-sm backdrop-blur-xl">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
                         {/* LOGO */}
                         <div className="flex items-center gap-3">
                             {/* Icon */}
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 64 84"
-                                width="52"
-                                height="64"
+                                width="38"
+                                height="50"
                                 fill="none"
                             >
                                 {/* OUTER ARCH */}
@@ -287,38 +333,28 @@ export default function Welcome({
                             </svg>
                             {/* Text */}
                             <div className="leading-tight">
-                                <h1 className="text-xl font-extrabold tracking-wide text-slate-900">
+                                <h1 className="text-base font-extrabold tracking-wide text-slate-900 sm:text-lg">
                                     BANK AL-ANDALOUS
                                 </h1>
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-xs font-medium text-slate-500">
                                     بنك الأندلس
                                 </p>
                             </div>
                         </div>
 
                         {/* DESKTOP NAV */}
-                        <nav className="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
-                            {[
-                                'Home',
-                                'About Us',
-                                'Features',
-                                'Security',
-                                'Contact Us',
-                            ].map((item, i) => (
+                        <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-500 md:flex">
+                            {navItems.map((item) => (
                                 <a
-                                    key={item}
-                                    href={
-                                        i === 0
-                                            ? '#'
-                                            : `#${item.toLowerCase().replace(' ', '')}`
-                                    }
-                                    className={
-                                        i === 0
-                                            ? 'font-bold text-orange-500'
+                                    key={item.id}
+                                    href={`#${item.id}`}
+                                    className={`transition-colors duration-200 ${
+                                        activeSection === item.id
+                                            ? 'font-extrabold text-orange-500'
                                             : 'hover:text-orange-500'
-                                    }
+                                    }`}
                                 >
-                                    {item}
+                                    {item.label}
                                 </a>
                             ))}
                         </nav>
@@ -364,19 +400,39 @@ export default function Welcome({
                     {/* MOBILE MENU */}
                     {open && (
                         <div className="w-full space-y-4 border-t bg-white px-4 pb-4 md:hidden">
-                            <a href="#" className="block">
+                            <a
+                                href="#home"
+                                onClick={() => setOpen(false)}
+                                className="block"
+                            >
                                 Home
                             </a>
-                            <a href="#aboutus" className="block">
+                            <a
+                                href="#aboutus"
+                                onClick={() => setOpen(false)}
+                                className="block"
+                            >
                                 About
                             </a>
-                            <a href="#features" className="block">
+                            <a
+                                href="#features"
+                                onClick={() => setOpen(false)}
+                                className="block"
+                            >
                                 Features
                             </a>
-                            <a href="#security" className="block">
+                            <a
+                                href="#security"
+                                onClick={() => setOpen(false)}
+                                className="block"
+                            >
                                 Security
                             </a>
-                            <a href="#contactus" className="block">
+                            <a
+                                href="#contactus"
+                                onClick={() => setOpen(false)}
+                                className="block"
+                            >
                                 Contact
                             </a>
 
@@ -412,112 +468,126 @@ export default function Welcome({
                 </header>
 
                 {/* home  */}
-                <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
-                    <div>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-sm font-semibold text-orange-500">
-                            <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
-                            Smart Banking for a Better Future
-                        </span>
+                <section
+                    id="home"
+                    className="relative overflow-hidden pt-28 pb-20"
+                >
+                    <img
+                        src={archImage}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute top-0 left-0 z-0 hidden h-full max-h-[720px] w-auto object-contain opacity-100 lg:block"
+                    />
 
-                        <h2 className="mt-6 max-w-xl text-3xl leading-[1.1] font-extrabold tracking-tight sm:text-4xl lg:text-6xl">
-                            Welcome to{' '}
-                            <span className="block bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
-                                Bank Al-Andalous
+                    <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+                        <div>
+                            <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-sm font-semibold text-orange-500">
+                                <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
+                                Smart Banking for a Better Future
                             </span>
-                            {/* 🔥 Moroccan separator */}
-                            <div className="mt-6 mb-6 flex max-w-md items-center gap-4">
-                                <div className="h-px flex-1 bg-orange-200" />
-                                <div className="text-xl text-orange-500">✺</div>
-                                <div className="h-px flex-1 bg-orange-200" />
-                            </div>
-                        </h2>
 
-                        <p className="mt-6 max-w-lg text-lg leading-8 text-slate-500">
-                            Inspired by 12 centuries of Moroccan heritage, Bank
-                            Al-Andalous combines tradition and innovation to
-                            deliver secure, modern financial solutions.
-                        </p>
-
-                        <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-                            {auth?.user ? (
-                                <Link
-                                    href="/dashboard"
-                                    className="flex items-center gap-3 rounded-xl bg-orange-500 px-6 py-4 font-bold text-white shadow-xl shadow-orange-500/30 transition hover:bg-orange-400"
-                                >
-                                    Go To Dashboard <ArrowRight size={18} />
-                                </Link>
-                            ) : (
-                                <Link
-                                    href="/login"
-                                    className="flex items-center gap-3 rounded-xl bg-orange-500 px-6 py-4 font-bold text-white shadow-xl shadow-orange-500/30 transition hover:bg-orange-400"
-                                >
-                                    Login to Your Account{' '}
-                                    <ArrowRight size={18} />
-                                </Link>
-                            )}
-
-                            <a
-                                href="#features"
-                                className="group flex items-center gap-2 rounded-xl border border-slate-200 px-6 py-4 font-bold text-slate-600 transition hover:border-orange-400 hover:text-orange-500"
-                            >
-                                <Landmark
-                                    size={16}
-                                    className="text-slate-900 transition group-hover:text-orange-500"
-                                />
-                                Explore Features
-                            </a>
-                        </div>
-
-                        <div className="mt-10 flex flex-wrap items-center gap-6 text-sm font-medium text-slate-500">
-                            {[
-                                [ShieldCheck, '100% Secure'],
-                                [Headphones, '24/7 Support'],
-                                [Lock, 'Your Data is Safe'],
-                            ].map(([Icon, label]: any, i) => (
-                                <span
-                                    key={label}
-                                    className="flex items-center gap-2"
-                                >
-                                    {i > 0 && (
-                                        <span className="h-4 w-px bg-slate-200" />
-                                    )}
-                                    <Icon
-                                        size={16}
-                                        className="text-orange-500"
-                                    />
-                                    {label}
+                            <h2 className="mt-6 max-w-xl text-3xl leading-[1.1] font-extrabold tracking-tight sm:text-4xl lg:text-6xl">
+                                Welcome to{' '}
+                                <span className="block bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+                                    Bank Al-Andalous
                                 </span>
-                            ))}
-                        </div>
-                    </div>
+                                {/* 🔥 Moroccan separator */}
+                                <div className="mt-6 mb-6 flex max-w-md items-center gap-4">
+                                    <div className="h-px flex-1 bg-orange-200" />
+                                    <div className="text-xl text-orange-500">
+                                        ✺
+                                    </div>
+                                    <div className="h-px flex-1 bg-orange-200" />
+                                </div>
+                            </h2>
 
-                    {/* Hero visual */}
-                    <motion.div
-                        animate={{ y: [0, -18, 0] }}
-                        transition={{
-                            duration: 4,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                        }}
-                        className="relative flex min-h-[520px] items-center justify-center px-6 py-16"
-                    >
-                        {/* Soft background glow */}
-                        <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-orange-400/10 blur-3xl" />
+                            <p className="mt-6 max-w-lg text-lg leading-8 text-slate-500">
+                                Inspired by 12 centuries of Moroccan heritage,
+                                Bank Al-Andalous combines tradition and
+                                innovation to deliver secure, modern financial
+                                solutions.
+                            </p>
 
-                        {/* CARD */}
-                        <div className="absolute top-44 left-0 z-10 hidden -rotate-[10deg] rounded-[2rem] bg-gradient-to-br from-[#2B1D16] via-[#1E140F] to-black p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.35)] lg:block">
-                            <div className="mb-10 flex items-center gap-3">
-                                {/* logo */}
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 64 84"
-                                    width="30"
-                                    height="30"
-                                    fill="none"
+                            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+                                {auth?.user ? (
+                                    <Link
+                                        href="/dashboard"
+                                        className="flex items-center gap-3 rounded-xl bg-orange-500 px-6 py-4 font-bold text-white shadow-xl shadow-orange-500/30 transition hover:bg-orange-400"
+                                    >
+                                        Go To Dashboard <ArrowRight size={18} />
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href="/login"
+                                        className="flex items-center gap-3 rounded-xl bg-orange-500 px-6 py-4 font-bold text-white shadow-xl shadow-orange-500/30 transition hover:bg-orange-400"
+                                    >
+                                        Login to Your Account{' '}
+                                        <ArrowRight size={18} />
+                                    </Link>
+                                )}
+
+                                <a
+                                    href="#features"
+                                    className="group flex items-center gap-2 rounded-xl border border-slate-200 px-6 py-4 font-bold text-slate-600 transition hover:border-orange-400 hover:text-orange-500"
                                 >
-                                    {/* OUTER ARCH */}
-                                    <path
-                                        d="
+                                    <Landmark
+                                        size={16}
+                                        className="text-slate-900 transition group-hover:text-orange-500"
+                                    />
+                                    Explore Features
+                                </a>
+                            </div>
+
+                            <div className="mt-10 flex flex-wrap items-center gap-6 text-sm font-medium text-slate-500">
+                                {[
+                                    [ShieldCheck, '100% Secure'],
+                                    [Headphones, '24/7 Support'],
+                                    [Lock, 'Your Data is Safe'],
+                                ].map(([Icon, label]: any, i) => (
+                                    <span
+                                        key={label}
+                                        className="flex items-center gap-2"
+                                    >
+                                        {i > 0 && (
+                                            <span className="h-4 w-px bg-slate-200" />
+                                        )}
+                                        <Icon
+                                            size={16}
+                                            className="text-orange-500"
+                                        />
+                                        {label}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Hero visual */}
+                        <motion.div
+                            animate={{ y: [0, -18, 0] }}
+                            transition={{
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                            }}
+                            className="relative z-10 flex min-h-[520px] items-center justify-center px-6 py-16"
+                        >
+                            {/* Soft background glow */}
+                            <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-orange-400/10 blur-3xl" />
+
+                            {/* CARD */}
+                            <div className="absolute top-44 left-0 z-10 hidden -rotate-[10deg] rounded-[2rem] bg-gradient-to-br from-[#2B1D16] via-[#1E140F] to-black p-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.35)] lg:block">
+                                <div className="mb-10 flex items-center gap-3">
+                                    {/* logo */}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 64 84"
+                                        width="30"
+                                        height="30"
+                                        fill="none"
+                                    >
+                                        {/* OUTER ARCH */}
+                                        <path
+                                            d="
             M11 78
             V30
             C11 26.5 12.3 23.7 14.8 21.5
@@ -534,15 +604,15 @@ export default function Welcome({
             C51.7 23.7 53 26.5 53 30
             V78
         "
-                                        stroke="#F28C28"
-                                        strokeWidth="2.3"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
+                                            stroke="#F28C28"
+                                            strokeWidth="2.3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
 
-                                    {/* DECORATIVE TOP INNER LINE */}
-                                    <path
-                                        d="
+                                        {/* DECORATIVE TOP INNER LINE */}
+                                        <path
+                                            d="
             M17 29
             C17 26.4 18 24.2 19.9 22.5
             L24 18.8
@@ -555,15 +625,15 @@ export default function Welcome({
             L44.1 22.5
             C46 24.2 47 26.4 47 29
         "
-                                        stroke="#F28C28"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
+                                            stroke="#F28C28"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
 
-                                    {/* INNER ARCH */}
-                                    <path
-                                        d="
+                                        {/* INNER ARCH */}
+                                        <path
+                                            d="
             M18 78
             V33
             C18 30.6 18.9 28.6 20.6 27
@@ -578,29 +648,29 @@ export default function Welcome({
             C45.1 28.6 46 30.6 46 33
             V78
         "
-                                        stroke="#F28C28"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
+                                            stroke="#F28C28"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
 
-                                    {/* LITTLE SHOULDER DETAILS */}
-                                    <path
-                                        d="M18 34.5H21.2"
-                                        stroke="#F28C28"
-                                        strokeWidth="1.6"
-                                        strokeLinecap="round"
-                                    />
-                                    <path
-                                        d="M42.8 34.5H46"
-                                        stroke="#F28C28"
-                                        strokeWidth="1.6"
-                                        strokeLinecap="round"
-                                    />
+                                        {/* LITTLE SHOULDER DETAILS */}
+                                        <path
+                                            d="M18 34.5H21.2"
+                                            stroke="#F28C28"
+                                            strokeWidth="1.6"
+                                            strokeLinecap="round"
+                                        />
+                                        <path
+                                            d="M42.8 34.5H46"
+                                            stroke="#F28C28"
+                                            strokeWidth="1.6"
+                                            strokeLinecap="round"
+                                        />
 
-                                    {/* TOP SMALL STAR */}
-                                    <path
-                                        d="
+                                        {/* TOP SMALL STAR */}
+                                        <path
+                                            d="
             M32 20.2
             L33.1 22.6
             L35.7 21.9
@@ -619,218 +689,230 @@ export default function Welcome({
             L30.9 22.6
             Z
         "
-                                        fill="#F28C28"
-                                    />
-
-                                    {/* FLOWER */}
-                                    <g transform="translate(32 53)">
-                                        {/* 8 petals */}
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(45)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(90)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(135)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(180)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(225)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(270)"
-                                        />
-                                        <path
-                                            d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.6"
-                                            fill="none"
-                                            transform="rotate(315)"
+                                            fill="#F28C28"
                                         />
 
-                                        {/* center ring */}
-                                        <circle
-                                            cx="0"
-                                            cy="0"
-                                            r="2.2"
-                                            stroke="#F28C28"
-                                            strokeWidth="1.4"
-                                            fill="none"
-                                        />
-                                    </g>
-                                </svg>
-                                <span className="text-sm font-bold tracking-wide text-orange-200">
-                                    BANK AL-ANDALOUS
-                                </span>
-                            </div>
+                                        {/* FLOWER */}
+                                        <g transform="translate(32 53)">
+                                            {/* 8 petals */}
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(45)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(90)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(135)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(180)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(225)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(270)"
+                                            />
+                                            <path
+                                                d="M0 0 C2 -2.2 4.2 -5.2 4.2 -8.4 C4.2 -10.8 2.5 -12.6 0 -13.4 C-2.5 -12.6 -4.2 -10.8 -4.2 -8.4 C-4.2 -5.2 -2 -2.2 0 0Z"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.6"
+                                                fill="none"
+                                                transform="rotate(315)"
+                                            />
 
-                            <div className="mb-5 h-8 w-12 rounded-md bg-gradient-to-br from-[#E8B04B] to-[#C58A1D]" />
-
-                            <p className="text-lg tracking-[0.25em] text-white/80">
-                                1234 5678 9012 3456
-                            </p>
-
-                            <div className="mt-10 flex items-end justify-between">
-                                <div>
-                                    <p className="text-[10px] tracking-widest text-white/40 uppercase">
-                                        Card Holder
-                                    </p>
-                                </div>
-
-                                <span className="text-2xl font-black text-white italic">
-                                    VISA
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* PHONE */}
-                        <div className="relative z-20 w-[285px] rounded-[3rem] border-[10px] border-[#2A211C] bg-white p-5 shadow-[0_30px_90px_rgba(0,0,0,0.2)] sm:w-[320px]">
-                            {/* Dynamic island */}
-                            <div className="mx-auto mb-5 h-5 w-24 rounded-full bg-slate-200" />
-
-                            <h2 className="text-[18px] font-black text-slate-900">
-                                Welcome Back!
-                            </h2>
-
-                            <p className="text-sm text-slate-400">
-                                Good to see you again
-                            </p>
-
-                            {/* BALANCE */}
-                            <div className="mt-5 rounded-[1.8rem] bg-gradient-to-br from-[#FF7A00] via-[#FF7300] to-[#F45D00] p-5 text-white shadow-[0_20px_50px_rgba(249,115,22,0.45)]">
-                                <p className="text-xs text-orange-100">
-                                    Total Balance
-                                </p>
-
-                                <h1 className="mt-2 text-[2rem] font-black tracking-tight">
-                                    25,430.85 DH
-                                </h1>
-
-                                <p className="mt-5 text-xs text-orange-100">
-                                    Available Balance
-                                </p>
-
-                                <p className="text-base font-bold">
-                                    24,520.20 DH
-                                </p>
-                            </div>
-
-                            {/* ACTIONS */}
-                            <div className="mt-5 grid grid-cols-4 gap-3">
-                                {[
-                                    [Send, 'Send'],
-                                    [ArrowDownToLine, 'Receive'],
-                                    [Smartphone, 'Top Up'],
-                                    [MoreHorizontal, 'More'],
-                                ].map(([Icon, label]) => (
-                                    <div
-                                        key={label}
-                                        className="rounded-2xl bg-[#FFF6EE] px-3 py-2 text-center"
-                                    >
-                                        <Icon className="mx-auto h-4 w-4 text-orange-500" />
-
-                                        <p className="mt-1 text-[8px] font-medium text-slate-500">
-                                            {label}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* TRANSACTIONS */}
-                            <div className="mt-6">
-                                <div className="mb-4 flex items-center justify-between">
-                                    <h3 className="text-xs font-extrabold text-slate-800">
-                                        Recent Transactions
-                                    </h3>
-
-                                    <span className="text-[11px] font-bold text-orange-500">
-                                        See All
+                                            {/* center ring */}
+                                            <circle
+                                                cx="0"
+                                                cy="0"
+                                                r="2.2"
+                                                stroke="#F28C28"
+                                                strokeWidth="1.4"
+                                                fill="none"
+                                            />
+                                        </g>
+                                    </svg>
+                                    <span className="text-sm font-bold tracking-wide text-orange-200">
+                                        BANK AL-ANDALOUS
                                     </span>
                                 </div>
 
-                                {[
-                                    [
-                                        'Salary Deposit',
-                                        '+3,500.00 DH',
-                                        'text-emerald-500',
-                                    ],
-                                    ['Shopping', '-120.00 DH', 'text-red-500'],
-                                    [
-                                        'Car Goal Saving',
-                                        '-100.00 DH',
-                                        'text-red-500',
-                                    ],
-                                    [
-                                        'Electricity Bill',
-                                        '-250.00 DH',
-                                        'text-red-500',
-                                    ],
-                                ].map(([name, amount, color]) => (
-                                    <div
-                                        key={name}
-                                        className="mb-3 flex items-center justify-between text-[11px]"
-                                    >
-                                        <span className="text-slate-500">
-                                            {name}
-                                        </span>
+                                <div className="flex h-8 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-orange-500 shadow-lg shadow-orange-900/20 sm:h-10 sm:w-13">
+                                    <div className="rounded-lgborder-yellow-700/30 grid h-6 w-9 grid-cols-2 gap-2 p-1 sm:h-7 sm:w-9">
+                                        <span className="rounded bg-yellow-700/40" />
+                                        <span className="rounded bg-yellow-700/40" />
+                                        <span className="rounded bg-yellow-700/40" />
+                                        <span className="rounded bg-yellow-700/40" />
+                                    </div>
+                                </div>
 
-                                        <span
-                                            className={`font-extrabold ${color}`}
+                                <p className="text-lg tracking-[0.25em] text-white/80">
+                                    1234 5678 9012 3456
+                                </p>
+
+                                <div className="mt-10 flex items-end justify-between">
+                                    <div>
+                                        <p className="text-[10px] tracking-widest text-white/40 uppercase">
+                                            Card Holder
+                                        </p>
+                                    </div>
+
+                                    <span className="text-2xl font-black text-white italic">
+                                        VISA
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* PHONE */}
+                            <div className="relative z-20 w-[285px] rounded-[3rem] border-[10px] border-[#2A211C] bg-white p-5 shadow-[0_30px_90px_rgba(0,0,0,0.2)] sm:w-[320px]">
+                                {/* Dynamic island */}
+                                <div className="mx-auto mb-5 h-5 w-24 rounded-full bg-slate-200" />
+
+                                <h2 className="text-[18px] font-black text-slate-900">
+                                    Welcome Back!
+                                </h2>
+
+                                <p className="text-sm text-slate-400">
+                                    Good to see you again
+                                </p>
+
+                                {/* BALANCE */}
+                                <div className="mt-5 rounded-[1.8rem] bg-gradient-to-br from-[#FF7A00] via-[#FF7300] to-[#F45D00] p-5 text-white shadow-[0_20px_50px_rgba(249,115,22,0.45)]">
+                                    <p className="text-xs text-orange-100">
+                                        Total Balance
+                                    </p>
+
+                                    <h1 className="mt-2 text-[2rem] font-black tracking-tight">
+                                        25,430.85 DH
+                                    </h1>
+
+                                    <p className="mt-5 text-xs text-orange-100">
+                                        Available Balance
+                                    </p>
+
+                                    <p className="text-base font-bold">
+                                        24,520.20 DH
+                                    </p>
+                                </div>
+
+                                {/* ACTIONS */}
+                                <div className="mt-5 grid grid-cols-4 gap-3">
+                                    {[
+                                        [Send, 'Send'],
+                                        [ArrowDownToLine, 'Receive'],
+                                        [Smartphone, 'Top Up'],
+                                        [MoreHorizontal, 'More'],
+                                    ].map(([Icon, label]) => (
+                                        <div
+                                            key={label}
+                                            className="rounded-2xl bg-[#FFF6EE] px-3 py-2 text-center"
                                         >
-                                            {amount}
+                                            <Icon className="mx-auto h-4 w-4 text-orange-500" />
+
+                                            <p className="mt-1 text-[8px] font-medium text-slate-500">
+                                                {label}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* TRANSACTIONS */}
+                                <div className="mt-6">
+                                    <div className="mb-4 flex items-center justify-between">
+                                        <h3 className="text-xs font-extrabold text-slate-800">
+                                            Recent Transactions
+                                        </h3>
+
+                                        <span className="text-[11px] font-bold text-orange-500">
+                                            See All
                                         </span>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
 
-                        {/* SECURITY BADGE */}
-                        <div className="absolute right-8 bottom-10 z-30 grid h-25 w-25 place-items-center rounded-full border-4 border-orange-300 bg-gradient-to-br from-[#FF7A00] to-[#F45D00] shadow-[0_20px_50px_rgba(249,115,22,0.45)]">
-                            <div className="m-2 grid h-16 w-16 place-items-center rounded-full border border-white/30 bg-white/10 backdrop-blur">
-                                <span className="text-white/80">
-                                    <ShieldCheck size={40} />
-                                </span>
+                                    {[
+                                        [
+                                            'Salary Deposit',
+                                            '+3,500.00 DH',
+                                            'text-emerald-500',
+                                        ],
+                                        [
+                                            'Shopping',
+                                            '-120.00 DH',
+                                            'text-red-500',
+                                        ],
+                                        [
+                                            'Car Goal Saving',
+                                            '-100.00 DH',
+                                            'text-red-500',
+                                        ],
+                                        [
+                                            'Electricity Bill',
+                                            '-250.00 DH',
+                                            'text-red-500',
+                                        ],
+                                    ].map(([name, amount, color]) => (
+                                        <div
+                                            key={name}
+                                            className="mb-3 flex items-center justify-between text-[11px]"
+                                        >
+                                            <span className="text-slate-500">
+                                                {name}
+                                            </span>
+
+                                            <span
+                                                className={`font-extrabold ${color}`}
+                                            >
+                                                {amount}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
+
+                            {/* SECURITY BADGE */}
+                            <div className="absolute right-8 bottom-10 z-30 grid h-25 w-25 place-items-center rounded-full border-4 border-orange-300 bg-gradient-to-br from-[#FF7A00] to-[#F45D00] shadow-[0_20px_50px_rgba(249,115,22,0.45)]">
+                                <div className="m-2 grid h-16 w-16 place-items-center rounded-full border border-white/30 bg-white/10 backdrop-blur">
+                                    <span className="text-white/80">
+                                        <ShieldCheck size={40} />
+                                    </span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
                 </section>
                 {/* About */}
                 <section
                     id="aboutus"
-                    className="border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
+                    className="scroll-mt-28 border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
                 >
                     <div className="mx-auto max-w-7xl">
                         {/* Header */}
@@ -920,7 +1002,7 @@ export default function Welcome({
                 {/* Features */}
                 <section
                     id="features"
-                    className="border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
+                    className="scroll-mt-28 border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
                 >
                     <div className="mx-auto max-w-7xl">
                         <div className="mb-14 text-center">
@@ -964,7 +1046,7 @@ export default function Welcome({
                 {/* Security */}
                 <section
                     id="security"
-                    className="border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
+                    className="scroll-mt-28 border-t border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8"
                 >
                     <div className="mx-auto max-w-7xl">
                         <div className="grid items-center gap-10 gap-12 md:grid-cols-2">
@@ -1097,7 +1179,7 @@ export default function Welcome({
             {/* Contact */}
             <section
                 id="contactus"
-                className="border-t border-slate-100 bg-slate-50 px-4 py-20 sm:px-6 lg:px-8"
+                className="scroll-mt-28 border-t border-slate-100 bg-slate-50 px-4 py-20 sm:px-6 lg:px-8"
             >
                 <div className="mx-auto max-w-7xl">
                     <div className="mb-14 text-center">
@@ -1229,6 +1311,17 @@ export default function Welcome({
                     </div>
                 </div>
             </section>
+
+            {showScrollTop && (
+                <button
+                    type="button"
+                    onClick={scrollToTop}
+                    aria-label="Back to top"
+                    className="fixed right-5 bottom-6 z-50 grid h-12 w-12 place-items-center rounded-full bg-orange-500 text-white shadow-2xl shadow-orange-500/35 transition duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:right-8 sm:bottom-8"
+                >
+                    <ChevronUp className="h-6 w-6" />
+                </button>
+            )}
 
             {/* Footer */}
             <footer className="border-t border-slate-200 bg-white">
@@ -1379,7 +1472,7 @@ export default function Welcome({
                                     'AI Financial Advisor',
                                     'Savings Goals',
                                     'Savings Simulator',
-                                    'Emergency Stop',
+                                    'Appointment',
                                     'Customer Support',
                                 ].map((item) => (
                                     <li key={item}>
@@ -1423,8 +1516,18 @@ export default function Welcome({
                     {/* Bottom bar */}
                     <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-100 pt-8 text-sm text-slate-400 sm:flex-row">
                         <p>
-                            © {new Date().getFullYear()} OrangeBank. All rights
-                            reserved.
+                            © {new Date().getFullYear()} Bank Al-Andalous. All
+                            rights reserved.
+                        </p>
+                        <p className="font-semibold text-slate-500">
+                            Developed by{' '}
+                            <span className="text-orange-500">
+                                Hamza Abouelwahab
+                            </span>{' '}
+                            &{' '}
+                            <span className="text-orange-500">
+                                Youssef Elkhafif
+                            </span>
                         </p>
                         <div className="flex flex-wrap justify-center gap-4 sm:justify-start">
                             {[
