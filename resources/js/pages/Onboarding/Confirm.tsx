@@ -67,7 +67,7 @@ export default function Confirm() {
 
                 <div className="relative z-10 flex items-center gap-3">
                     <div className="w-9 h-9 bg-[#E8632A] rounded-xl flex items-center justify-center font-bold text-white" style={{ fontFamily: "'Syne', sans-serif" }}>B</div>
-                    <span className="text-white font-bold" style={{ fontFamily: "'Syne', sans-serif" }}>BankCo</span>
+                    <span className="text-white font-bold" style={{ fontFamily: "'Syne', sans-serif" }}>BANK AL-ANDALOUS</span>
                 </div>
 
                 <div className="relative z-10">

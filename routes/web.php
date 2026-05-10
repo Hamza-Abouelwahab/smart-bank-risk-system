@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\RiskController as AdminRiskController;
 use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
@@ -18,7 +19,9 @@ use App\Http\Controllers\Banking\SavingGroupController;
 use App\Http\Controllers\Banking\TransactionController;
 use App\Http\Controllers\Banking\SavingsController;
 use App\Http\Controllers\LoanSimulationController;
+use App\Http\Controllers\RiskCenterController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\StatementController;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -50,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/onboarding/profile',  [ProfileController::class, 'create'])->name('onboarding.profile');
     Route::post('/onboarding/profile', [ProfileController::class, 'store'])->name('onboarding.profile.store');
+
+    Route::post('/onboarding/profile/scan', [ProfileController::class, 'scan'])
+        ->name('onboarding.profile.scan');
 
     Route::get('/onboarding/bank',     [BankController::class, 'create'])->name('onboarding.bank');
     Route::post('/onboarding/bank',    [BankController::class, 'store'])->name('onboarding.bank.store');
@@ -116,12 +122,21 @@ Route::middleware(['auth'])->group(function () {
 // User dashboard
 Route::middleware(['auth', 'verified', 'onboarding'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/risk-center', [RiskCenterController::class, 'index'])
+        ->name('risk.center');
+
+    Route::post('/risk-center/recalculate', [RiskCenterController::class, 'recalculate'])
+        ->name('risk.recalculate');
 });
 
 // Admin
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
+
+        Route::get('/admin/risk-center', [AdminRiskController::class, 'index'])
+        ->name('admin.risk');
 
     Route::get('/admin/users', [DashboardController::class, 'users'])
         ->name('admin.users');
@@ -150,6 +165,10 @@ Route::middleware(['auth'])->get('/account', [AccountController::class, 'show'])
 
 // Banking
 Route::middleware(['auth', 'onboarding'])->group(function () {
+    Route::get('/account/statement', [StatementController::class, 'download'])
+        ->name('account.statement');
+
+
     Route::get('/withdraw',     [WithdrawController::class,    'create'])->name('withdraw');
     Route::post('/withdraw',    [WithdrawController::class,    'store'])->name('withdraw.store');
     Route::post('/withdraw/{withdrawalRequest}/cancel', [WithdrawController::class, 'cancel'])

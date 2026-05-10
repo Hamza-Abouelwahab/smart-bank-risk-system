@@ -1,13 +1,12 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head, Link, router } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/register';
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 
 export default function Register() {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-
     const [preview, setPreview] = useState<string | null>(null);
 
     const labelClass =
@@ -24,11 +23,15 @@ export default function Register() {
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
+                onSuccess={() => {
+                    router.visit('/onboarding/profile', {
+                        replace: true,
+                    });
+                }}
                 className="flex flex-col gap-5"
             >
                 {({ processing, errors }) => (
                     <>
-                        {/* Avatar Upload */}
                         <div className="flex flex-col items-center gap-3">
                             <div
                                 onClick={() => fileInputRef.current?.click()}
@@ -38,6 +41,7 @@ export default function Register() {
                                     <img
                                         src={preview}
                                         className="h-full w-full object-cover"
+                                        alt="Avatar preview"
                                     />
                                 ) : (
                                     <div className="flex h-full items-center justify-center text-sm text-slate-400 dark:text-white/40">
@@ -56,9 +60,7 @@ export default function Register() {
                                     const file = e.target.files?.[0];
 
                                     if (file) {
-                                        setPreview(
-                                            URL.createObjectURL(file),
-                                        );
+                                        setPreview(URL.createObjectURL(file));
                                     }
                                 }}
                             />
@@ -68,14 +70,9 @@ export default function Register() {
                             </span>
                         </div>
 
-                        {/* Form */}
                         <div className="grid gap-5">
-                            {/* Name */}
                             <div className="grid gap-2">
-                                <label
-                                    htmlFor="name"
-                                    className={labelClass}
-                                >
+                                <label htmlFor="name" className={labelClass}>
                                     Full name
                                 </label>
 
@@ -91,18 +88,11 @@ export default function Register() {
                                     className={inputClass}
                                 />
 
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-1"
-                                />
+                                <InputError message={errors.name} className="mt-1" />
                             </div>
 
-                            {/* Email */}
                             <div className="grid gap-2">
-                                <label
-                                    htmlFor="email"
-                                    className={labelClass}
-                                >
+                                <label htmlFor="email" className={labelClass}>
                                     Email address
                                 </label>
 
@@ -120,12 +110,8 @@ export default function Register() {
                                 <InputError message={errors.email} />
                             </div>
 
-                            {/* Password */}
                             <div className="grid gap-2">
-                                <label
-                                    htmlFor="password"
-                                    className={labelClass}
-                                >
+                                <label htmlFor="password" className={labelClass}>
                                     Password
                                 </label>
 
@@ -139,12 +125,9 @@ export default function Register() {
                                     className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:ring-orange-500/20 dark:border-[#2A2520] dark:bg-[#241b16] dark:text-white dark:placeholder:text-white/40"
                                 />
 
-                                <InputError
-                                    message={errors.password}
-                                />
+                                <InputError message={errors.password} />
                             </div>
 
-                            {/* Confirm Password */}
                             <div className="grid gap-2">
                                 <label
                                     htmlFor="password_confirmation"
@@ -163,14 +146,9 @@ export default function Register() {
                                     className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:ring-orange-500/20 dark:border-[#2A2520] dark:bg-[#241b16] dark:text-white dark:placeholder:text-white/40"
                                 />
 
-                                <InputError
-                                    message={
-                                        errors.password_confirmation
-                                    }
-                                />
+                                <InputError message={errors.password_confirmation} />
                             </div>
 
-                            {/* Submit */}
                             <button
                                 type="submit"
                                 tabIndex={5}
@@ -182,7 +160,6 @@ export default function Register() {
                             </button>
                         </div>
 
-                        {/* Login */}
                         <div className="text-center text-sm text-slate-500 dark:text-slate-400">
                             Already have an account?{' '}
                             <Link
