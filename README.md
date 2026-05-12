@@ -39,4 +39,4 @@ The goal of this project is to present a complete smart banking experience with 
 
 ## Author
 
-Created by Hamza Abouelwahab.
+Created by Hamza Abouelwahab && Youssef Elkhafif
