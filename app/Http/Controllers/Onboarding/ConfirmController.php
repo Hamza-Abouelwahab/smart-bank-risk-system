@@ -35,7 +35,7 @@ class ConfirmController extends Controller
     {
 
         $accountNumber = $this->generateAccountNumber();
-        $rip = $this->generateRip();
+        $rib = $this->generateRib();
 
         // dd(session('onboarding.account_type'));
 
@@ -47,7 +47,7 @@ class ConfirmController extends Controller
 
         $request->user()->bankAccount()->create([
             'account_number' => $accountNumber,
-            'rip'            => $rip,
+            'rib'            => $rib,
             'account_type'   => $accountType,
             'balance'        => 0.00,
         ]);
@@ -66,12 +66,18 @@ class ConfirmController extends Controller
         return $number;
     }
 
-    private function generateRip()
-    {
-        do {
-            $rip = 'RIP' . rand(100000000, 999999999);
-        } while (BankAccount::where('rip', $rip)->exists());
+    private function generateRib()
+{
+    $bankCode = '450';
+    $branchCode = '360';
 
-        return $rip;
-    }
+    do {
+        $accountPart = str_pad((string) random_int(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
+        $key = str_pad((string) random_int(0, 99), 2, '0', STR_PAD_LEFT);
+
+        $rib = $bankCode . $branchCode . $accountPart . $key;
+    } while (BankAccount::where('rib', $rib)->exists());
+
+    return $rib;
+}
 }

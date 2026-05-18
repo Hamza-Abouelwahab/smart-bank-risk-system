@@ -24,11 +24,11 @@ class StatementController extends Controller
             ->get();
 
         $totalDeposits = $transactions
-            ->where('type', 'deposit')
+            ->whereIn('type', ['deposit', 'credit'])
             ->sum('amount');
 
         $totalWithdrawals = $transactions
-            ->whereIn('type', ['withdraw', 'withdrawal'])
+            ->whereIn('type', ['withdraw', 'withdrawal' , 'debit'])
             ->sum('amount');
 
         $pdf = Pdf::loadView('pdf.account-statement', [

@@ -7,6 +7,7 @@ use App\Models\SavingGoal;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SavingGoalController extends Controller
 {
@@ -188,37 +189,63 @@ class SavingGoalController extends Controller
         }
 
         $suggestedDaily = $remaining / $daysLeft;
-$safeDaily = $account->balance * 0.20;
+        $safeDaily = $account->balance * 0.20;
 
-if ($suggestedDaily > $safeDaily) {
-    return back()->withErrors([
-        'goal' => 'Smart suggestion: your daily saving is too high. Try extending the deadline or reducing the target.',
-    ]);
-}
+        if ($suggestedDaily > $safeDaily) {
+            return back()->withErrors([
+                'goal' => 'Smart suggestion: your daily saving is too high. Try extending the deadline or reducing the target.',
+            ]);
+        }
 
-$suggestedDaily = round($suggestedDaily, 2);
+        $suggestedDaily = round($suggestedDaily, 2);
 
-$goal->update([
-    'daily_amount' => $suggestedDaily,
-]);
+        $goal->update([
+            'daily_amount' => $suggestedDaily,
+        ]);
 
-return back()->with(
-    'success',
-    'Smart plan applied: ' . number_format($suggestedDaily, 2) .
-    ' MAD/day based on your balance and deadline.'
-);
+        return back()->with(
+            'success',
+            'Smart plan applied: ' . number_format($suggestedDaily, 2) .
+                ' MAD/day based on your balance and deadline.'
+        );
     }
-
+    // deleted Goals
     public function destroy(SavingGoal $goal)
     {
         if ($goal->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $goal->delete();
+        DB::transaction(function () use ($goal) {
+            $account = Auth::user()->bankAccount;
 
-        return back()->with('success', 'Goal deleted successfully.');
+            if (!$account) {
+                throw new \Exception('No bank account found.');
+            }
+
+            $amountToRefund = (float) $goal->saved_amount;
+
+            if ($amountToRefund > 0) {
+                $account->balance += $amountToRefund;
+                $account->save();
+
+                NotificationService::create(
+                    userId: Auth::id(),
+                    title: 'Saving Goal Deleted',
+                    message: number_format($amountToRefund, 2) . ' MAD has been returned to your balance after deleting "' . $goal->name . '".',
+                    type: 'saving',
+                    icon: 'wallet',
+                    actionUrl: '/savings/index'
+                );
+            }
+
+            $goal->delete();
+        });
+
+        return back()->with('success', 'Goal deleted successfully and saved money returned to your balance.');
     }
+
+
     public function pause(SavingGoal $goal)
     {
         if ($goal->user_id !== Auth::id()) {

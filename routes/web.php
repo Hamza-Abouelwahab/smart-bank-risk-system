@@ -160,6 +160,23 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/deposit/find-customer', [DepositController::class, 'findCustomer'])
         ->name('deposit.find-customer');
 });
+ // Notifications
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.read-all');
+
+    Route::delete('/notifications/clear-all', [NotificationController::class, 'clearAll'])
+        ->name('notifications.clear-all');
+
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])
+        ->name('notifications.destroy');
+});
 
 // Account card
 Route::middleware(['auth'])->get('/account', [AccountController::class, 'show'])->name('account.show');
@@ -168,19 +185,6 @@ Route::middleware(['auth'])->get('/account', [AccountController::class, 'show'])
 Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::get('/account/statement', [StatementController::class, 'download'])
         ->name('account.statement');
-
-    // Notifications
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->name('notifications.index');
-    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
-        ->name('notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
-        ->name('notifications.read-all');
-    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])
-        ->name('notifications.destroy');
-    Route::delete('/notifications/clear-all', [NotificationController::class, 'clearAll'])
-        ->name('notifications.clear-all');
-
 
     Route::get('/withdraw',     [WithdrawController::class,    'create'])->name('withdraw');
     Route::post('/withdraw',    [WithdrawController::class,    'store'])->name('withdraw.store');

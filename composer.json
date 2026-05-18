@@ -1,11 +1,15 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/react-starter-kit",
+    "name": "hamza/bank-al-andalous",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Bank Al-Andalous is a smart digital banking web application built with Laravel, React, Inertia.js, and Tailwind CSS.",
     "keywords": [
+        "bank",
+        "digital-banking",
         "laravel",
-        "framework"
+        "react",
+        "inertia",
+        "tailwindcss"
     ],
     "license": "MIT",
     "require": {

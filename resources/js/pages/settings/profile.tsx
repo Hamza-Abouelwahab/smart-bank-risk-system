@@ -25,8 +25,15 @@ type Props = {
     mustVerifyEmail: boolean;
     status?: string;
     profile?: { phone?: string; address?: string } | null;
-    bankAccount?: { account_number?: string; account_type?: string } | null;
-    financialProfile?: { occupation?: string; employment_status?: string } | null;
+    bankAccount?: {
+        account_number?: string;
+        account_type?: string;
+        rib?: string;
+    } | null;
+    financialProfile?: {
+        occupation?: string;
+        employment_status?: string;
+    } | null;
 };
 
 const inputClass =
@@ -35,6 +42,13 @@ const inputClass =
 const readonlyClass =
     'w-full cursor-not-allowed select-none rounded-xl border border-[#EDE8E0] bg-[#f8f6f1]/70 px-4 py-2.5 text-sm text-[#1f1a17]/55 dark:border-[#2A2520] dark:bg-[#241b16]/70 dark:text-white/50';
 
+function formatRib(rib: string | null) {
+    if (!rib) return '';
+
+    const clean = rib.replace(/\s/g, '');
+
+    return clean.replace(/^(\d{3})(\d{3})(\d{16})(\d{2})$/, '$1 $2 $3 $4');
+}
 export default function Profile({
     mustVerifyEmail,
     status,
@@ -78,12 +92,15 @@ export default function Profile({
                 {/* Account statement download */}
                 <div className="overflow-hidden rounded-2xl border border-[#EDE8E0] bg-white shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
                     <div className="relative p-6">
-                        <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-orange-500/10" />
+                        <div className="absolute top-0 right-0 h-28 w-28 rounded-bl-full bg-orange-500/10" />
 
                         <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex gap-4">
                                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-500/20">
-                                    <FileText size={22} className="text-orange-500" />
+                                    <FileText
+                                        size={22}
+                                        className="text-orange-500"
+                                    />
                                 </div>
 
                                 <div>
@@ -92,22 +109,25 @@ export default function Profile({
                                             Account Statement
                                         </h3>
 
-                                        <span className="rounded-full bg-orange-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-orange-600 dark:text-orange-400">
+                                        <span className="rounded-full bg-orange-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-orange-600 uppercase dark:text-orange-400">
                                             PDF
                                         </span>
                                     </div>
 
                                     <p className="max-w-xl text-sm leading-relaxed text-[#1f1a17]/55 dark:text-white/55">
-                                        Download your official Bank Al-Andalous account statement with your
-                                        account details, RIP, balance, and recent transactions.
+                                        Download your official Bank Al-Andalous
+                                        account statement with your account
+                                        details, RIB, balance, and recent
+                                        transactions.
                                     </p>
 
-                                    <div className="mt-4 grid grid-cols-1 gap-3 text-xs text-[#1f1a17]/55 sm:grid-cols-3 dark:text-white/55">
+                                    {/* <div className="mt-4 grid grid-cols-1 gap-3 text-xs text-[#1f1a17]/55 sm:grid-cols-3 dark:text-white/55">
                                         <div className="rounded-xl border border-[#EDE8E0] bg-[#F8F6F1] px-3 py-2 dark:border-[#2A2520] dark:bg-[#241b16]">
                                             <span className="block font-semibold text-[#1f1a17] dark:text-white">
                                                 Account
                                             </span>
-                                            {bankAccount?.account_number ?? 'Not available'}
+                                            {bankAccount?.account_number ??
+                                                'Not available'}
                                         </div>
 
                                         <div className="rounded-xl border border-[#EDE8E0] bg-[#F8F6F1] px-3 py-2 dark:border-[#2A2520] dark:bg-[#241b16]">
@@ -115,7 +135,8 @@ export default function Profile({
                                                 Type
                                             </span>
                                             <span className="capitalize">
-                                                {bankAccount?.account_type ?? 'Not available'}
+                                                {bankAccount?.account_type ??
+                                                    'Not available'}
                                             </span>
                                         </div>
 
@@ -125,13 +146,13 @@ export default function Profile({
                                             </span>
                                             Secure PDF
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
                             <a
                                 href="/account/statement"
-                                className="inline-flex h-11 flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-[#FF4B00] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#D83A00] focus:outline-none focus:ring-2 focus:ring-orange-500/30"
+                                className="inline-flex h-11 flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-[#FF4B00] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#D83A00] focus:ring-2 focus:ring-orange-500/30 focus:outline-none"
                             >
                                 <Download size={16} />
                                 Download PDF
@@ -143,7 +164,28 @@ export default function Profile({
                 {/* Read-only info cards */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="rounded-2xl border border-[#EDE8E0] bg-white p-5 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
-                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1f1a17]/45 dark:text-white/45">
+                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider text-[#1f1a17]/45 uppercase dark:text-white/45">
+                            <CreditCard size={13} className="text-orange-500" />
+                            RIB
+                        </div>
+
+                        <p className="font-mono text-sm font-semibold text-[#1f1a17] dark:text-white">
+                            {bankAccount?.rib ? (
+                                formatRib(bankAccount.rib)
+                            ) : (
+                                <span className="text-[#1f1a17]/40 dark:text-white/40">
+                                    —
+                                </span>
+                            )}
+                        </p>
+
+                        <p className="mt-1 text-xs text-[#1f1a17]/45 capitalize dark:text-white/45">
+                            {bankAccount?.account_type ?? '—'}
+                        </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#EDE8E0] bg-white p-5 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
+                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider text-[#1f1a17]/45 uppercase dark:text-white/45">
                             <CreditCard size={13} className="text-orange-500" />
                             Account Number
                         </div>
@@ -154,13 +196,13 @@ export default function Profile({
                                 </span>
                             )}
                         </p>
-                        <p className="mt-1 text-xs capitalize text-[#1f1a17]/45 dark:text-white/45">
+                        <p className="mt-1 text-xs text-[#1f1a17]/45 capitalize dark:text-white/45">
                             {bankAccount?.account_type ?? ''}
                         </p>
                     </div>
 
                     <div className="rounded-2xl border border-[#EDE8E0] bg-white p-5 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
-                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1f1a17]/45 dark:text-white/45">
+                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider text-[#1f1a17]/45 uppercase dark:text-white/45">
                             <Briefcase size={13} className="text-orange-500" />
                             Occupation
                         </div>
@@ -174,11 +216,11 @@ export default function Profile({
                     </div>
 
                     <div className="rounded-2xl border border-[#EDE8E0] bg-white p-5 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
-                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1f1a17]/45 dark:text-white/45">
+                        <div className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-wider text-[#1f1a17]/45 uppercase dark:text-white/45">
                             <Building2 size={13} className="text-orange-500" />
                             Employment
                         </div>
-                        <p className="text-sm font-semibold capitalize text-[#1f1a17] dark:text-white">
+                        <p className="text-sm font-semibold text-[#1f1a17] capitalize dark:text-white">
                             {financialProfile?.employment_status ?? (
                                 <span className="text-[#1f1a17]/40 dark:text-white/40">
                                     —
@@ -190,7 +232,7 @@ export default function Profile({
 
                 {/* Editable form */}
                 <div className="rounded-2xl border border-[#EDE8E0] bg-white p-6 shadow-sm dark:border-[#2A2520] dark:bg-[#1A1714]">
-                    <p className="mb-5 text-xs font-semibold uppercase tracking-wider text-[#1f1a17]/45 dark:text-white/45">
+                    <p className="mb-5 text-xs font-semibold tracking-wider text-[#1f1a17]/45 uppercase dark:text-white/45">
                         Editable fields
                     </p>
 
@@ -206,7 +248,10 @@ export default function Profile({
                                         htmlFor="name"
                                         className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/75 dark:text-white/75"
                                     >
-                                        <User size={14} className="text-orange-500" />
+                                        <User
+                                            size={14}
+                                            className="text-orange-500"
+                                        />
                                         Full name
                                     </label>
                                     <input
@@ -219,7 +264,10 @@ export default function Profile({
                                         placeholder="Full name"
                                         className={inputClass}
                                     />
-                                    <InputError className="mt-1" message={errors.name} />
+                                    <InputError
+                                        className="mt-1"
+                                        message={errors.name}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
@@ -227,7 +275,10 @@ export default function Profile({
                                         htmlFor="email"
                                         className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/75 dark:text-white/75"
                                     >
-                                        <Mail size={14} className="text-orange-500" />
+                                        <Mail
+                                            size={14}
+                                            className="text-orange-500"
+                                        />
                                         Email address
                                     </label>
                                     <input
@@ -240,7 +291,10 @@ export default function Profile({
                                         placeholder="Email address"
                                         className={inputClass}
                                     />
-                                    <InputError className="mt-1" message={errors.email} />
+                                    <InputError
+                                        className="mt-1"
+                                        message={errors.email}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
@@ -248,7 +302,10 @@ export default function Profile({
                                         htmlFor="phone"
                                         className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/75 dark:text-white/75"
                                     >
-                                        <Phone size={14} className="text-orange-500" />
+                                        <Phone
+                                            size={14}
+                                            className="text-orange-500"
+                                        />
                                         Phone number
                                     </label>
                                     <input
@@ -271,7 +328,10 @@ export default function Profile({
                                         htmlFor="address"
                                         className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/75 dark:text-white/75"
                                     >
-                                        <MapPin size={14} className="text-orange-500" />
+                                        <MapPin
+                                            size={14}
+                                            className="text-orange-500"
+                                        />
                                         Address
                                     </label>
                                     <input
@@ -290,6 +350,20 @@ export default function Profile({
                                 </div>
 
                                 {/* Read-only fields */}
+                                <div className="grid gap-2">
+                                    <label className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/45 dark:text-white/45">
+                                        <CreditCard size={14} />
+                                        RIB
+                                        <Lock
+                                            size={11}
+                                            className="ml-auto text-[#1f1a17]/30 dark:text-white/30"
+                                        />
+                                    </label>
+                                    <div className={readonlyClass}>
+                                        {formatRib(bankAccount?.rib ?? '—')}
+                                    </div>
+                                </div>
+
                                 <div className="grid gap-2">
                                     <label className="flex items-center gap-2 text-sm font-medium text-[#1f1a17]/45 dark:text-white/45">
                                         <CreditCard size={14} />
@@ -315,7 +389,8 @@ export default function Profile({
                                             />
                                         </label>
                                         <div className={readonlyClass}>
-                                            {financialProfile?.occupation ?? '—'}
+                                            {financialProfile?.occupation ??
+                                                '—'}
                                         </div>
                                     </div>
 
@@ -328,8 +403,13 @@ export default function Profile({
                                                 className="ml-auto text-[#1f1a17]/30 dark:text-white/30"
                                             />
                                         </label>
-                                        <div className={readonlyClass + ' capitalize'}>
-                                            {financialProfile?.employment_status ?? '—'}
+                                        <div
+                                            className={
+                                                readonlyClass + ' capitalize'
+                                            }
+                                        >
+                                            {financialProfile?.employment_status ??
+                                                '—'}
                                         </div>
                                     </div>
                                 </div>
@@ -338,7 +418,8 @@ export default function Profile({
                                     auth.user.email_verified_at === null && (
                                         <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
                                             <p className="text-sm text-amber-700 dark:text-amber-400">
-                                                Your email address is unverified.{' '}
+                                                Your email address is
+                                                unverified.{' '}
                                                 <Link
                                                     href={send()}
                                                     as="button"
@@ -348,10 +429,12 @@ export default function Profile({
                                                 </Link>
                                             </p>
 
-                                            {status === 'verification-link-sent' && (
+                                            {status ===
+                                                'verification-link-sent' && (
                                                 <p className="mt-1.5 text-sm font-medium text-orange-600 dark:text-orange-400">
-                                                    A new verification link has been sent
-                                                    to your email address.
+                                                    A new verification link has
+                                                    been sent to your email
+                                                    address.
                                                 </p>
                                             )}
                                         </div>
@@ -364,7 +447,11 @@ export default function Profile({
                                         data-test="update-profile-button"
                                         className="flex items-center gap-2 rounded-xl bg-orange-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#7a2800] disabled:opacity-60"
                                     >
-                                        {processing ? <Spinner /> : <Save size={15} />}
+                                        {processing ? (
+                                            <Spinner />
+                                        ) : (
+                                            <Save size={15} />
+                                        )}
                                         Save changes
                                     </button>
                                 </div>
@@ -386,7 +473,7 @@ export default function Profile({
                 </div>
 
                 {/* Danger zone */}
-                <div className="rounded-2xl border border-red-200 bg-red-50/50 p-6 dark:border-red-500/30 dark:bg-red-950/20">
+                {/* <div className="rounded-2xl border border-red-200 bg-red-50/50 p-6 dark:border-red-500/30 dark:bg-red-950/20">
                     <div className="mb-4 flex items-center gap-2">
                         <Shield size={16} className="text-red-500" />
                         <h3 className="text-sm font-semibold text-red-600 dark:text-red-400">
@@ -395,7 +482,7 @@ export default function Profile({
                     </div>
 
                     <DeleteUser />
-                </div>
+                </div> */}
             </div>
         </>
     );

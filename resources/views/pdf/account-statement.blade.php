@@ -150,8 +150,8 @@
                             <div class="label">Account number</div>
                             <div class="value">{{ $account->account_number }}</div>
                             <br>
-                            <div class="label">RIP</div>
-                            <div class="value">{{ $account->rip ?? 'N/A' }}</div>
+                            <div class="label">RIB</div>
+                            <div class="value">{{ $account->rib ?? 'N/A' }}</div>
                             <br>
                             <div class="label">Account type</div>
                             <div class="value">{{ ucfirst($account->account_type) }}</div>

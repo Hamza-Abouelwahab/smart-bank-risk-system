@@ -11,7 +11,7 @@ class BankAccount extends Model
     protected $fillable = [
         'user_id',
         'account_number',
-        'rip',
+        'rib',
         'account_type',
         'balance',
     ];
@@ -27,13 +27,5 @@ class BankAccount extends Model
     }
 
 
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function (BankAccount $account) {
-            $account->account_number = 'MA' . str_pad(random_int(1, 999999999), 9, '0', STR_PAD_LEFT);
-            $account->rip            = '007' . str_pad(random_int(1, 9999999999999), 13, '0', STR_PAD_LEFT);
-        });
-    }
+    
 }
